@@ -1,0 +1,46 @@
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "page": 1,
+        "page_len": 5,
+        "total_num": 5,
+        "total_page": 2,
+        "data": {
+            "name": "华熙国际投资集团有限公司",
+            "classify": "投资",
+            "infolist": [
+                {
+                    "code": 1,
+                    "time": "NaN",
+                    "equity": 100.0,
+                    "invested_name": "华熙安宁温泉健康产业投资有限公司"
+                },
+                {
+                    "code": 2,
+                    "time": "NaN",
+                    "equity": 100.0,
+                    "invested_name": "华熙滦平文化旅游发展有限公司"
+                },
+                {
+                    "code": 3,
+                    "time": "NaN",
+                    "equity": 60.0,
+                    "invested_name": "华熙上旅国际文化产业有限公司"
+                },
+                {
+                    "code": 4,
+                    "time": "NaN",
+                    "equity": 47.0,
+                    "invested_name": "华熙上旅全域文化旅游发展有限公司"
+                },
+                {
+                    "code": 5,
+                    "time": "NaN",
+                    "equity": 34.25,
+                    "invested_name": "重庆华熙文信股权投资基金合伙企业（有限合伙）"
+                }
+            ]
+        }
+    }
+}

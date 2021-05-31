@@ -1,0 +1,85 @@
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "page": 1,
+        "page_len": 10,
+        "total_num": 101,
+        "total_page": 11,
+        "data": {
+            "name": "中国石油化工集团有限公司",
+            "visit_information": [
+                {
+                    "code": 1,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "孙磊",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 2,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "张龙",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 3,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "孙磊",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 4,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "张龙",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 5,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "孙磊",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 6,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "张龙",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 7,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "张龙",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 8,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "赵雷",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 9,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "张龙",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                },
+                {
+                    "code": 10,
+                    "gz_bm": "区发改委",
+                    "qt_ld": "孙磊",
+                    "shi_you": "走访",
+                    "zf_time": "2020.06.01"
+                }
+            ]
+        }
+    }
+}

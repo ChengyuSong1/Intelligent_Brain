@@ -1,0 +1,9 @@
+P1.3,静态数据
+url： api/v1/enterprise/info/three/static
+meth: get
+
+
+P1.3,排行
+url： api/v1/enterprise/info/three/rank
+meth：get
+请求参数： ， page=‘’， page_len=‘’, classify=资金/人才/住房

@@ -1,0 +1,241 @@
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "healthlevel": {
+            "type": "营收",
+             # 健康水平饼图
+            "pieChart": {
+                "pie1": {
+                    "value": [
+                        56.71,
+                        22.67,
+                        58.86
+                    ],
+                    "color": [
+                        "c1",
+                        "c2",
+                        "c3"
+                    ],
+                    "rhl": [
+                        "yellow",
+                        "red",
+                        "yellow"
+                    ],
+                    "speech": [
+                        "与往年营收增长持平",
+                        " 低于往年营收增长",
+                        "与往年营收增长持平"
+                    ]
+                },
+                "pie2": {
+                    "value": [
+                        57.67,
+                        94.24,
+                        93.04
+                    ],
+                    "color": [
+                        "c1",
+                        "c2",
+                        "c3"
+                    ],
+                    "rhl": [
+                        "yellow",
+                        "red",
+                        "red"
+                    ],
+                    "speech": [
+                        "与往年营收增长持平",
+                        " 低于往年营收增长",
+                        " 低于往年营收增长"
+                    ]
+                },
+                "pie3": {
+                    "value": [
+                        25.27,
+                        56.94,
+                        75.77
+                    ],
+                    "color": [
+                        "c1",
+                        "c2",
+                        "c3"
+                    ],
+                    "rhl": [
+                        "blue",
+                        "yellow",
+                        "red"
+                    ],
+                    "speech": [
+                        "高于往年营收增长",
+                        "与往年营收增长持平",
+                        " 低于往年营收增长"
+                    ]
+                }
+            },
+             #列表
+            "list": [
+                {
+                    "code": 1,
+                    "name": "中国石油化工集团有限公司",
+                    "list1": {
+                        "value": 46.44,
+                        "color": "c3"
+                    },
+                    "list2": {
+                        "value": 352.36,
+                        "color": "c3"
+                    },
+                    "list3": {
+                        "value": 18.6,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 2,
+                    "name": "戴姆勒大中华投资有限公司",
+                    "list1": {
+                        "value": 24.58,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 766.39,
+                        "color": "c1"
+                    },
+                    "list3": {
+                        "value": 62.05,
+                        "color": "c3"
+                    }
+                },
+                {
+                    "code": 3,
+                    "name": "ABB（中国）有限公司",
+                    "list1": {
+                        "value": 54.41,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 913.53,
+                        "color": "c2"
+                    },
+                    "list3": {
+                        "value": 17.53,
+                        "color": "c3"
+                    }
+                },
+                {
+                    "code": 4,
+                    "name": "阿尔派电子（中国）有限公司",
+                    "list1": {
+                        "value": 74.76,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 642.22,
+                        "color": "c3"
+                    },
+                    "list3": {
+                        "value": 48.41,
+                        "color": "c1"
+                    }
+                },
+                {
+                    "code": 5,
+                    "name": "埃森哲（中国）有限公司北京分公司",
+                    "list1": {
+                        "value": 58.06,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 177.41,
+                        "color": "c1"
+                    },
+                    "list3": {
+                        "value": 95.44,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 6,
+                    "name": "爱尔康（中国）眼科产品有限公司",
+                    "list1": {
+                        "value": 66.76,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 3.67,
+                        "color": "c3"
+                    },
+                    "list3": {
+                        "value": 58.96,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 7,
+                    "name": "爱慕股份有限公司",
+                    "list1": {
+                        "value": 32.69,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 673.52,
+                        "color": "c2"
+                    },
+                    "list3": {
+                        "value": 45.93,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 8,
+                    "name": "爱上电视传媒（北京）有限公司",
+                    "list1": {
+                        "value": 86.17,
+                        "color": "c2"
+                    },
+                    "list2": {
+                        "value": 71.51,
+                        "color": "c1"
+                    },
+                    "list3": {
+                        "value": 51.29,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 9,
+                    "name": "奔驰有限公司",
+                    "list1": {
+                        "value": 87.21,
+                        "color": "c1"
+                    },
+                    "list2": {
+                        "value": 318.87,
+                        "color": "c1"
+                    },
+                    "list3": {
+                        "value": 69.51,
+                        "color": "c2"
+                    }
+                },
+                {
+                    "code": 10,
+                    "name": "安东石油技术（集团）有限公司",
+                    "list1": {
+                        "value": 32.66,
+                        "color": "c3"
+                    },
+                    "list2": {
+                        "value": 673.52,
+                        "color": "c3"
+                    },
+                    "list3": {
+                        "value": 83.32,
+                        "color": "c1"
+                    }
+                }
+            ]
+        }
+    }
+}

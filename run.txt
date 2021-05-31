@@ -1,0 +1,10 @@
+
+#  mount /dev/sdb /data
+
+# 位置
+192.168.3.158:/home/sqlapi
+
+# run
+nohup python3 manage.py  runserver 0.0.0.0:8888 &
+
+

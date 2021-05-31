@@ -1,0 +1,66 @@
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "page": 1,
+        "page_len": 10,
+        "total_num": 36,
+        "total_page": 4,
+        "data": {
+            "name": "中国石化化工销售有限公司",
+            "classify": "正向",
+            "sentiment": [
+                {
+                    "code": 1,
+                    "title": "皇马科技2020年年度董事会经营评述",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 2,
+                    "title": "原标题：皇马科技2020年年度董事会经营评述    来源：同花顺金融研究中心 皇马科技2020年年度董事会经营评述内容如下：一、经营情况讨论与分析　　2",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 3,
+                    "title": "会通新材：这样的创业故事你学不会美的提供全方位支持",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 4,
+                    "title": "会通新材：这样的创业故事你学不会美的提供全方位支持",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 5,
+                    "title": "全球GDP下降对石化产品需求将放缓",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 6,
+                    "title": "全球GDP下降对石化产品需求将放缓",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 7,
+                    "title": "盛航海运IPO：用安全、高效赢得客户信赖",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 8,
+                    "title": "盛航海运IPO：用安全、高效赢得客户信赖",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 9,
+                    "title": "孙兵率队赴省直部门和相关企业对接洽谈工作",
+                    "dateTime": "NaN"
+                },
+                {
+                    "code": 10,
+                    "title": "孙兵与中国石化化工销售有限公司华中分公司党委书记赵振辉进行了交流洽谈，并参加见证了市政府和中石化化工...",
+                    "dateTime": "NaN"
+                }
+            ]
+        }
+    }
+}

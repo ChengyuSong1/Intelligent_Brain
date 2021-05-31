@@ -1,0 +1,22 @@
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "page": 1,
+        "page_len": 5,
+        "total_num": 1,
+        "total_page": 1,
+        "data": {
+            "name": "﻿精进电动科技股份有限公司",
+            "classify": "司法冻结",
+            "number": 1,
+            "infolist": [
+                {
+                    "code": 1,
+                    "time": "2021-03-09",
+                    "title": "公示冻结股权、其他投资权权益"
+                }
+            ]
+        }
+    }
+}

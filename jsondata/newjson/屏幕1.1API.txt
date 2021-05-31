@@ -1,0 +1,9 @@
+P1.1,静态数据
+url： api/v1/enterprise/info/one/static
+meth: get
+
+
+P1.1,饼图及列表
+url： api/v1/enterprise/info/one/healthy
+meth：get
+请求参数： ， page=‘’， page_len=‘’, classify=营收同比增长/营收同比持平/营收同比下降/增速超同行/增速持平同行/增速低于同行

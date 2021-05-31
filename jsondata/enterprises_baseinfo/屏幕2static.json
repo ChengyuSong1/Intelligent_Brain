@@ -1,0 +1,111 @@
+﻿{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        # 基本信息
+        "basicInfo": {
+            "name": "腾讯",
+            "building": "北京朝阳高科大厦",
+            "industry": "化工",
+            "peopleNum": "1000以上",
+            "space": "1500m²",
+            "Capital": "32654722.2万",
+            "times": "2015-7-30",
+            "nature": "有限责任公司（国有独资）",
+            "jie_xiang": "望京街道",
+            "guan_jia": "望京发改委"
+        },
+          # 标签
+          "enterpriseLabel": {
+            "is_sjfwb_qy": ,     # 市级服务包
+            "is_ss_qy": ,        # 上市
+            "is_zgcgx_qy": ,     # 中关村高新
+            "is_dl_qy": ,        # 瞪羚
+            "is_qjfwb_qy": ,     # 区级服务包
+            "is_gs_qy": ,        # 规上
+            "is_gjzdfz_qy": ,    # 国家重点
+            "is_djs_qy": ,       # 独角兽
+            "is_fm_qy": ,        # 凤鸣
+            "is_zb_qy": ,        # 总部
+        },
+     # 重要经济数据
+        "tax": {
+            "ljys_tax": {
+                "number": 2293.48,
+                "tb": 62,
+                "speech": "1月至4月累计营收",
+                "unit": "万"
+            },
+            "dj_ljys_tax": {
+                "number": 1984.36,
+                "tb": 86,
+                "speech": "1月至7月累计地级收入",
+                "unit": "万"
+            },
+            "qj_ljys_tax": {
+                "number": 1806.08,
+                "tb": 36,
+                "speech": "1月至8月区级收入",
+                "unit": "万"
+            }
+        },
+     # 企业创新能力
+        "economics": {
+            "technology": {          # 企业研发费用
+                "number": 262,
+                "unit": "万"
+            },
+            "investment": 77,              # 企业研发投入比例
+            "research": {
+                "tb": 35,                 # 同比增速
+                "ranking": 8              # 在服务包企业排名
+            },
+            "zj_trademark": 36,         # 一年商标增幅
+            "zj_patent": 80,            # 一年专利增幅
+            "zj_softWork": 95,            # 一年软著增幅
+            "tzj_trademark": 469,          # 总商标增幅
+            "tzj_patent": 301,            # 总专利增幅
+            "tzj_softWork": 223           # 总软著增幅
+        },
+        "riskChangeInfo": {
+            "qy_change":,             # 企业变更总次数
+            "djg_change": ,            # 董监半年变更
+            "xzcfNum": ,               # 行政处罚
+            "gq_change": ,             # 股权变更
+            "jyycNum": ,               # 企业半年风险新增
+            "qyfxNum":,               # 经营异常
+            "sxxxNum":                # 失信信息
+        },
+         # 个税信息
+        "ge_shui": {
+            "p_num": 74,       # 个税人数奖励
+            "p_unit": "人",    # 单位
+            "t_num": 191.47,  # 奖励总额
+            "t_unit": "万"    # 单位
+        },
+        # 高管信息
+        "managerInfo": [
+            {
+                "photo": "",
+                "name": "张玉卓",
+                "education": "中国工程院院士",
+                "major": "",
+                "jian_li": "简历1"
+            },
+            {
+                "photo": "",
+                "name": "马永生",
+                "education": "中国工程院院士",
+                "major": "地质学、古生物学、沉积学",
+                "jian_li": "简历2"
+            },
+            {
+                "photo": "",
+                "name": "熊维平",
+                "education": "中国工程院院士",
+                "major": "选矿专业",
+                "jian_li": "简历3"
+            }
+        ]
+    }
+}

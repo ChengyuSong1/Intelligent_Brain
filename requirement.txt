@@ -1,0 +1,7 @@
+good==0.0.8
+django==3.2
+PyMySQL==1.0.2
+typeannotations==0.1.0
+
+
+# -i https://pypi.doubanio.com/simple/

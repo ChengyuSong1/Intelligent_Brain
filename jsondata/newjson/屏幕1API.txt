@@ -1,0 +1,10 @@
+P1,静态数据
+url： api/v1/enterprise/info/static_new
+meth: get
+
+
+P1,企业数量相关数据
+url： api/v1/enterprise/info/healthy_new
+meth：get
+请求参数： classify=营收/营收行业/税收/税收行业/利润/利润增速/人均/地均
+

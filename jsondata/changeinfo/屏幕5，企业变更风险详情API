@@ -1,0 +1,21 @@
+1， 股权情况
+url： api/v1/enterprise/stock_right/info
+meth: get
+请求参数：name=“企业名称”，page=‘’, page_len=‘’， classify="投资/注资“
+
+2， 变更信息
+url： api/v1/enterprise/change/info
+meth: get
+请求参数：name=“企业名称”，  page=‘’， page_len=‘’， classify="董监/法人/经营/股权“
+
+
+3， 风险信息
+url： api/v1/enterprise/risk/info
+meth: get
+请求参数：name=“企业名称”，  page=‘’， page_len=‘’， classify="被执行/法院公告/行政处罚/裁判文书/开庭公告/经营异常/司法冻结/失信信息“
+
+
+4， 舆情信息
+url： api/v1/enterprise/self/sentiment
+meth: get
+请求参数：name=“企业名称”，  page=‘’， page_len=‘’， classify="正向/负向“

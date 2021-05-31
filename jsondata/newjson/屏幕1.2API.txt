@@ -1,0 +1,9 @@
+P1.2,静态数据
+url： api/v1/enterprise/info/two/static
+meth: get
+
+
+P1.2,饼图及列表
+url： api/v1/enterprise/info/two/healthy
+meth：get
+请求参数： ， page=‘’， page_len=‘’, classify=税收同比增长/税收同比持平/税收同比下降/税收增速超同行/税收增速持平同行/税收增速低于同行
