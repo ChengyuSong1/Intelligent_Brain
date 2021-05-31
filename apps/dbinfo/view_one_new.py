@@ -686,10 +686,11 @@ class InfoStaticThreeView(BaseView):
                 industry_category = row3["industry_category"]
                 proportion_num = row3["proportion_num"]
                 proportion_ranking = row3["proportion_ranking"]
-                bingtu[support_category] = bingtu.get(support_category, [[], [], []])
+                bingtu[support_category] = bingtu.get(support_category, [[], [], [], []])
                 bingtu[support_category][0].append(industry_category)
-                bingtu[support_category][1].append(proportion_num)
+                bingtu[support_category][1].append(proportion_num.replace("%", ""))
                 bingtu[support_category][2].append(proportion_ranking)
+                bingtu[support_category][3].append("%")
 
         z1 = [
             [
@@ -717,6 +718,7 @@ class InfoStaticThreeView(BaseView):
                     "hang_ye": bingtu.get("资金", [[], [], []])[0],
                     "number": bingtu.get("资金", [[], [], []])[1],
                     "rank": bingtu.get("资金", [[], [], []])[2],
+                    "unit": bingtu.get("资金", [[], [], []])[3],
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
@@ -737,6 +739,7 @@ class InfoStaticThreeView(BaseView):
                     "hang_ye": bingtu.get("人才", [[], [], []])[0],
                     "number": bingtu.get("人才", [[], [], []])[1],
                     "rank": bingtu.get("人才", [[], [], []])[2],
+                    "unit": bingtu.get("人才", [[], [], []])[3],
 
                 },
                 "five_year": {
@@ -755,6 +758,7 @@ class InfoStaticThreeView(BaseView):
                     "hang_ye": bingtu.get("住房", [[], [], []])[0],
                     "number": bingtu.get("住房", [[], [], []])[1],
                     "rank": bingtu.get("住房", [[], [], []])[2],
+                    "unit": bingtu.get("住房", [[], [], []])[3],
 
                 },
                 "five_year": {
