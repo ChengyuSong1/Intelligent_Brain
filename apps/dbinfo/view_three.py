@@ -216,6 +216,7 @@ class TaxationStaticView(BaseView):
 
             },
             #  //模块2：企业税负监测
+            "fu_wu_bao_qy_num": get_dict_key(thedict=shuifudict, key=""),
             "taxRate": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio", units=0.01),  # 税负率
             "taxRate_tb": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio_change_by_year"),  # 税负率
             "taxRate_tb_color": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio_color"),  # 税负率
@@ -338,30 +339,22 @@ class TaxationStaticView(BaseView):
 
 
                     ],
-                    #     "年度的增值税",  # true
-                    #      "消费税",
-                    #      "企业所得税",  # true
-                    #  "个人所得税",  # true
-                    #  "印花税",
-                    #  "房产税",
-                    #  "资源税",
-                    #  "城市维护建设税",
-                    #  "环境保护税",
-                    #  "契税",
-                    #  "耕地占用税",
-                    #  "关税",
-                    #  "车辆购置税",
-                    #  "车船使用税",
-                    #  "土地增值税",  # true
-                    #  "城镇土地使用税"
+                        #  "增值税",  # true 1
+                        #  "企业所得税",  # true2
+                        #  "个人所得税",  # true4
+                        #  "印花税",  # 5
+                        #  "城市维护建设税",  ####8
+                        #  "土地增值税",  # true15
+                        #  "教育费附加收入",
+                        #  "地方教育附加收入",
 
                     "ld_num": [
-                        get_dict_key(thedict=year_data, key="value_added_tax_contribution_rate"),
-                        get_dict_key(thedict=year_data, key="enterprise_income_tax_contribution_rate"),
-                        get_dict_key(thedict=year_data, key="individual_income_tax_contribution_rate"),
-                        get_dict_key(thedict=year_data, key="stamp_business_tax_contribution_rate"),
-                        get_dict_key(thedict=year_data, key="city_maintenance_and_construction_tax_contribution_rate"),
-                        get_dict_key(thedict=year_data, key="land_business_tax_contribution_rate"),
+                        get_dict_key(thedict=year_data, key="ent_add_on_tax_dstr_ratio"),
+                        get_dict_key(thedict=year_data, key="ent_value_added_tax_dstr_ratio"),
+                        get_dict_key(thedict=year_data, key="ent_individual_tax_dstr_ratio"),
+                        get_dict_key(thedict=year_data, key=""),
+                        get_dict_key(thedict=year_data, key=""),
+                        get_dict_key(thedict=year_data, key="ent_land_tax_added_dstr_ratio"),
                         get_dict_key(thedict=year_data, key=""),
                         get_dict_key(thedict=year_data, key=""),
 
@@ -369,17 +362,17 @@ class TaxationStaticView(BaseView):
                 }
             },
 
-            # 企业同比数据
-            "ent_tb_data": {
-                "ent_add_on_tax_dstr_ratio":      get_dict_key(thedict=jingying_dict, key="ent_add_on_tax_dstr_ratio"),
-                # 企业增值税区级收入同比
-                "ent_value_added_tax_dstr_ratio": get_dict_key(thedict=jingying_dict, key="ent_value_added_tax_dstr_ratio"),
-                # 企业企业所得税区级收入同比
-                "ent_individual_tax_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_individual_tax_dstr_ratio"),
-                # 企业个人所得税区级收入同比
-                "ent_land_tax_added_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_land_tax_added_dstr_ratio"),
-                # 企业土地增值税区级收入同比
-
-            },
+            # # 企业同比数据
+            # "ent_tb_data": {
+            #     "ent_add_on_tax_dstr_ratio":      get_dict_key(thedict=jingying_dict, key="ent_add_on_tax_dstr_ratio"),
+            #     # 企业增值税区级收入同比
+            #     "ent_value_added_tax_dstr_ratio": get_dict_key(thedict=jingying_dict, key="ent_value_added_tax_dstr_ratio"),
+            #     # 企业企业所得税区级收入同比
+            #     "ent_individual_tax_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_individual_tax_dstr_ratio"),
+            #     # 企业个人所得税区级收入同比
+            #     "ent_land_tax_added_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_land_tax_added_dstr_ratio"),
+            #     # 企业土地增值税区级收入同比
+            #
+            # },
         }
         return static

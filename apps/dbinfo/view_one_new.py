@@ -58,6 +58,10 @@ class InfoStaticView(BaseView):
         a3, n3 = get_unit_value(value=v3, unit="万")
         a4, n4 = get_unit_value(value=v4, unit="万")
 
+        h1 = ["行业{}".format(i) for i in range(1, 7)]
+        num1 = [get_random_num(1, 20) for i in range(1, 7)]
+        un1 = ["%" for i in range(1, 7)]
+
         static = {
           # 模块1， 朝阳区服务包企业基本信息
           "EnterpriseInfo": {
@@ -220,15 +224,22 @@ class InfoStaticView(BaseView):
                 "zeng_su": get_dict_key(thedict=year_data, key="total_profit_change_ratio"),
                 "speech": "1至{}月累计利润情况".format(m),
           },
+          # 人地均
+          "ren_di": {
+                 "ren_number": get_dict_key(thedict=year_data, key="ent_dstr_tax_incm_by_emp", units=10000),
+                 "ren_unit": "万元/人",
+                 "di_number": get_dict_key(thedict=year_data, key="ent_dstr_tax_incm_by_area", units=10000),
+                 "di_unit": "万元/平米",
+                 "speech": "1至{}月累计人地均区级收入情况".format(4),
+            },
 
-        # 人地均
-        "ren_di": {
-             "ren_number": get_dict_key(thedict=year_data, key="ent_dstr_tax_incm_by_emp", units=10000),
-             "ren_unit": "万元/人",
-             "di_number": get_dict_key(thedict=year_data, key="ent_dstr_tax_incm_by_area", units=10000),
-             "di_unit": "万元/平米",
-             "speech": "1至{}月累计人地均区级收入情况".format(4),
-        },
+          # 重点行业分布
+          "key_trades": {
+              "hy": h1,
+              "num": num1,
+              "unit": un1,
+
+          }
 
         }
 
