@@ -367,6 +367,19 @@ class TaxationStaticView(BaseView):
 
                     ],
                 }
-            }
+            },
+
+            # 企业同比数据
+            "ent_tb_data": {
+                "ent_add_on_tax_dstr_ratio":      get_dict_key(thedict=jingying_dict, key="ent_add_on_tax_dstr_ratio"),
+                # 企业增值税区级收入同比
+                "ent_value_added_tax_dstr_ratio": get_dict_key(thedict=jingying_dict, key="ent_value_added_tax_dstr_ratio"),
+                # 企业企业所得税区级收入同比
+                "ent_individual_tax_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_individual_tax_dstr_ratio"),
+                # 企业个人所得税区级收入同比
+                "ent_land_tax_added_dstr_ratio":  get_dict_key(thedict=jingying_dict, key="ent_land_tax_added_dstr_ratio"),
+                # 企业土地增值税区级收入同比
+
+            },
         }
         return static
