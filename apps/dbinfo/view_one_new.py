@@ -28,7 +28,9 @@ class InfoStaticView(BaseView):
 
         year_data = dict()
         five_years = [i for i in range(year-5, year)]
+        timedata = dict()
         all_data = dict()
+        hangye_data = dict()
         # data_dict = dict()
         with MysqlDB(database=RPDSQL) as cursor:
             sql = "select * from screen1 where year<={} order by year desc;".format(year)
@@ -38,6 +40,27 @@ class InfoStaticView(BaseView):
                 year_data = rows[0]
             for one in rows:
                 all_data[one["year"]] = one
+
+            sql1 = "select year,month from health_pie_chart;"
+            cursor.execute(sql1)
+            rows1 = cursor.fetchall()
+            for row1 in rows1:
+                timedata[row1["year"]] = timedata.get(row1["year"], [])
+                timedata[row1["year"]].append(row1["month"])
+
+            year = max(list(timedata.keys()))
+            month = max(timedata[year])
+
+            sql2 = "select * from health_pie_chart where year={} and month={};".format(year, month)
+            # print(classify, sql)
+            cursor.execute(sql2)
+            rows2 = cursor.fetchall()
+            for row2 in rows2:
+                ent_business_type = get_dict_key(thedict=row2, key="ent_business_type")
+                if ent_business_type != "NaN":
+                    if ent_business_type:
+                        hangye_data[ent_business_type] = hangye_data.get(ent_business_type, 0)
+                        hangye_data[ent_business_type] += 1
 
         # q_num = [get_dict_key(thedict=all_data.get(i, {}), key="district_tax_income", units=10000*10000) for i in five_years]
         # z_num = [get_dict_key(thedict=all_data.get(i, {}), key="support_fund") for i in five_years]
@@ -58,9 +81,21 @@ class InfoStaticView(BaseView):
         a3, n3 = get_unit_value(value=v3, unit="万")
         a4, n4 = get_unit_value(value=v4, unit="万")
 
-        h1 = ["行业{}".format(i) for i in range(1, 7)]
-        num1 = [get_random_num(1, 20) for i in range(1, 7)]
-        un1 = ["%" for i in range(1, 7)]
+        hangye = [{"name": k, "value": v, "unit": "家"} for k, v in hangye_data.items()]
+        hangye = sorted(hangye, key=lambda keys: keys["value"], reverse=True)
+        if len(hangye) > 6:
+            hangye = hangye[:6]
+        elif len(hangye) < 6:
+            for i in range(6 - len(hangye)):
+                hangye.append({"name": "无行业", "value": 0, "unit": "家"})
+
+        h1 = list()
+        h2 = list()
+        h3 = list()
+        for one in hangye:
+            h1.append(one["name"])
+            h2.append(one["value"])
+            h3.append(one["unit"])
 
         static = {
           # 模块1， 朝阳区服务包企业基本信息
@@ -236,8 +271,8 @@ class InfoStaticView(BaseView):
           # 重点行业分布
           "key_trades": {
               "hy": h1,
-              "num": num1,
-              "unit": un1,
+              "num": h2,
+              "unit": h3,
 
           }
 
@@ -703,19 +738,8 @@ class InfoStaticThreeView(BaseView):
                 bingtu[support_category][2].append(proportion_ranking)
                 bingtu[support_category][3].append("%")
 
-        z1 = [
-            [
-                get_dict_key(thedict=all_data.get(i, {}), key="support_fund"),
-                get_dict_key(thedict=all_data.get(i, {}), key="industrial_support_fund"),
-                get_dict_key(thedict=all_data.get(i, {}), key="individual_tax_support_fund"),
-                get_dict_key(thedict=all_data.get(i, {}), key="ysyy_support_fund"),
-                get_dict_key(thedict=all_data.get(i, {}), key="add_on_contribution_fund_support"),
-
-             ] for i in five_year
-        ]
-
-        r1 = [get_dict_key(thedict=all_data.get(i, {}), key="talent_service") for i in five_year]
-        f1 = [get_dict_key(thedict=all_data.get(i, {}), key="housing_support") for i in five_year]
+        # r1 = [get_dict_key(thedict=all_data.get(i, {}), key="talent_service") for i in five_year]
+        # f1 = [get_dict_key(thedict=all_data.get(i, {}), key="housing_support") for i in five_year]
 
         healthy = {
 
@@ -733,8 +757,14 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "speech": ["资金支持", "产业资金支持", "个税资金支持", "一事一议资金奖励", "增加至贡献奖励"],
-                    "number": z1,
+                    "speech1": "产业资金支持",
+                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="industrial_support_fund") for i in five_year],
+                    "speech2": "个税资金支持",
+                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="individual_tax_support_fund") for i in five_year],
+                    "speech3": "一事一议资金奖励",
+                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="ysyy_support_fund") for i in five_year],
+                    "speech4": "增加至贡献奖励",
+                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="add_on_contribution_fund_support") for i in five_year],
                     "unit": "万元",
 
                 },
@@ -755,7 +785,14 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "number": r1,
+                    "speech1": "工作居住证办理",
+                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="work_and_residence_permit") for i in five_year],
+                    "speech2": "高管人才引进",
+                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="executive_talent_intro") for i in five_year],
+                    "speech3": "应届毕业生",
+                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="graduates_settlement") for i in five_year],
+                    "speech4": "留学生人才引进",
+                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="overseas_talent_service_intro") for i in five_year],
                     "unit": "次",
                 },
             },
@@ -774,7 +811,14 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "number": f1,
+                    "speech1": "诚志畅悦园",
+                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="czcyy") for i in five_year],
+                    "speech2": "梧桐湾嘉苑",
+                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="wtwjy") for i in five_year],
+                    "speech3": "瑞晖嘉苑",
+                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="rhjy") for i in five_year],
+                    "speech4": "澜悦景苑",
+                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="lyjy") for i in five_year],
                     "unit": "次",
                 },
             },

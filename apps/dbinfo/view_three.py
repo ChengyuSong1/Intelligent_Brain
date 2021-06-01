@@ -216,7 +216,7 @@ class TaxationStaticView(BaseView):
 
             },
             #  //模块2：企业税负监测
-            "fu_wu_bao_qy_num": get_dict_key(thedict=shuifudict, key=""),
+            "fu_wu_bao_qy_num": get_dict_key(thedict=shuifudict, key="serv_pack_indus_ent_num"),
             "taxRate": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio", units=0.01),  # 税负率
             "taxRate_tb": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio_change_by_year"),  # 税负率
             "taxRate_tb_color": get_dict_key(thedict=shuifudict, key="tax_revenue_ratio_color"),  # 税负率
