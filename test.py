@@ -1,7 +1,7 @@
 """
-192.168.3.158   boraydata2021
+192.168.30.78 P@ssw0rd
 cd /data/rpdsql-ops
-./rapids -P15333
+./rapids -P 5521
 """
 from utils.database_utils import MysqlDB
 from sqlapi.settings import RPDSQL

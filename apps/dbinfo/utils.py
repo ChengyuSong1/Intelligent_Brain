@@ -68,28 +68,30 @@ def get_dict_key(thedict, key, units=None, num=None):
     :return:
     """
     value = thedict.get(key, "NaN")
-    if isinstance(value, float):
-        # if units is not None:
-        #     value = value/units
-        # value = round(value, 2)
-        if value == 0:
-            value = "NaN"
+    # if isinstance(value, float):
+    #     # if units is not None:
+    #     #     value = value/units
+    #     # value = round(value, 2)
+    #     if value == 0:
+    #         value = "NaN"
+    #
+    # elif isinstance(value, int):
+    #     # if units is not None:
+    #     #     value = value/units
+    #     if value == 0:
+    #         value = "NaN"
+    #
+    # elif isinstance(value, decimal.Decimal):
+    #     if isinstance(value, float):
+    #     value = float(value)
+    #     # if units is not None:
+    #     #     value = value/units
+    #
+    #     if value == 0:
+    #         value = "NaN"
 
-    elif isinstance(value, int):
-        # if units is not None:
-        #     value = value/units
-        if value == 0:
-            value = "NaN"
-
-    elif isinstance(value, decimal.Decimal):
-        value = float(value)
-        # if units is not None:
-        #     value = value/units
-
-        if value == 0:
-            value = "NaN"
-
-    elif isinstance(value, str):
+    if isinstance(value, str):
+    # elif isinstance(value, str):
         if value == "0000-00-00":
             value = "NaN"
         if not value:
@@ -132,13 +134,68 @@ def get_dict_key(thedict, key, units=None, num=None):
     return value
 
 
+def get_area_num(thedict, key, unit="平方米"):
+    value = float(thedict.get(key, "NaN"))
+
+    unit_dict = {
+        "平方米": {1: "万平方千米", 2: "千平方千米", 3: "平方米"},
+    }
+
+    if isinstance(value, float):
+        if value >= 10000:
+            value = value/10000
+            value = round(value, 2)
+            unit = unit_dict[unit][1]
+        elif value >= 1000:
+            value = value/1000
+            value = round(value, 2)
+            unit = unit_dict[unit][2]
+
+    return value, unit
+
+def get_area_unit(thedict, key):
+
+    for index, value in enumerate(thedict[key]):
+        if value >= 10000:
+            thedict[key][index] = value / 10000
+            thedict[key][index] = str(round(thedict[key][index], 2)) + "万平方米"
+        elif value >= 1000:
+            thedict[key][index] = value / 1000
+            thedict[key][index] = str(round(thedict[key][index], 2)) + "千平方米"
+        else:
+            thedict[key][index] = str(round(thedict[key][index], 2)) + "平方米"
+    return thedict[key]
+
+def get_array_unit(thedict, key):
+
+    for index, value in enumerate(thedict[key]):
+        if thedict[key][index] is None:
+            thedict[key][index] = "***"
+        else:
+            if value >= 10000*10000 or value <= -10000*10000 :
+                thedict[key][index] = value / (10000 * 10000)
+                thedict[key][index] = str(round(thedict[key][index], 2)) + "亿元"
+            elif value >= 10000 or value <= -10000:
+                thedict[key][index] = value / 10000
+                thedict[key][index] = str(round(thedict[key][index], 2)) + "万元"
+            else:
+                thedict[key][index] = str(round(thedict[key][index], 2)) + "元"
+    return thedict[key]
+
+def null_percentage_unit(thedict, key):
+
+    for index, value in enumerate(thedict[key]):
+        if thedict[key][index] is None:
+            thedict[key][index] = "***"
+    return thedict[key]
+
 def get_unit_num(thedict, key, unit="元"):
     value = thedict.get(key, "NaN")
 
     try:
         value = int(value)
     except:
-        value = "NaN"
+        value = "***"
 
     try:
         if int(value) == 9999999999:
@@ -158,11 +215,11 @@ def get_unit_num(thedict, key, unit="元"):
     }
 
     if isinstance(value, int):
-        if value >= (10000*10000):
+        if value >= (10000*10000) or value <= (-10000*10000):
             value = value/(10000*10000)
             value = round(value, 2)
             unit = unit_dict[unit][1]
-        elif value >= 10000:
+        elif value >= 10000 or value <= (-10000):
             value = value / 10000
             value = round(value, 2)
             unit = unit_dict[unit][2]
@@ -211,6 +268,3 @@ def get_unit_value(value, unit="元"):
         unit = "万元"
 
     return value, unit
-
-
-

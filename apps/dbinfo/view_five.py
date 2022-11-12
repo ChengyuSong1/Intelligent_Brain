@@ -42,16 +42,12 @@ class StockRightView(BaseView):
             tb = "screen5_fund_injection_ent_list"
 
             with MysqlDB(database=RPDSQL) as cursor:
-                sql = "SELECT * FROM  {} WHERE name='{}' order by equity desc LIMIT {} OFFSET {};".format(tb, name,
-                                                                                                          page_len, (
-                                                                                                                      page - 1) * page_len)
-
+                sql = "SELECT * FROM  {} WHERE name='{}' order by equity desc LIMIT {} OFFSET {};".format(tb, name,page_len, (page - 1) * page_len)
                 # print(sql)
                 cursor.execute(sql)
                 rows = cursor.fetchall()
 
-                sql3 = "SELECT count(*) FROM  {} WHERE name='{}'  order by equity desc;".format(tb, name)
-
+                sql3 = "SELECT count(*) FROM {} WHERE name='{}' order by equity desc;".format(tb, name)
                 cursor.execute(sql3)
                 rows3 = cursor.fetchall()
                 total_num = rows3[0].get("count(*)")
@@ -85,9 +81,7 @@ class StockRightView(BaseView):
         elif classify == "投资":
             tb = "screen5_invest_ent_list"
             with MysqlDB(database=RPDSQL) as cursor:
-                sql = "SELECT * FROM  {} WHERE name='{}' order by gubi desc LIMIT {} OFFSET {};".format(tb, name,
-                                                                                                        page_len, (
-                                                                                                                page - 1) * page_len)
+                sql = "SELECT * FROM  {} WHERE name='{}' order by gubi desc LIMIT {} OFFSET {};".format(tb, name,page_len, (page - 1) * page_len)
 
                 # print(sql)
                 cursor.execute(sql)

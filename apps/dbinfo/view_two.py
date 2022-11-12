@@ -65,6 +65,72 @@ class BaseinfoStaticView(BaseView):
                 except:
                     pass
 
+            # 董监高变更备案近半年变更次数
+            djg_sql = "select count(1) from s2_risk_assess where dongjiangao_total_change = '{}' and dongjiangao_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(djg_sql)
+            rows_change = cursor.fetchall()
+            djgbgNum = rows_change[0].get("count(1)")
+            # 法人变更次数
+            legal_sql = "select count(1) from s2_risk_assess where legal_person_total_change = '{}' and legal_person_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(legal_sql)
+            rows_change = cursor.fetchall()
+            frbgNum = rows_change[0].get("count(1)")
+            # 经营范围期限变更
+            opt_scale_sql = "select count(1) from s2_risk_assess where operation_scale_total_change = '{}' and operation_scale_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(opt_scale_sql)
+            rows_change = cursor.fetchall()
+            jyfwbgNum = rows_change[0].get("count(1)")
+            # 股权变更
+            stock_sql = "select count(1) from s2_risk_assess where stock_total_change = '{}' and operation_scale_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            gqbgNum = rows_change[0].get("count(1)")
+
+            # 被执行情况
+            stock_sql = "select count(1) from s2_risk_assess where executed_status = '{}' and executed_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            bzxqkNum = rows_change[0].get("count(1)")
+            # 法院公告
+            stock_sql = "select count(1) from s2_risk_assess where court_announcement = '{}' and court_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            fyggNum = rows_change[0].get("count(1)")
+            # 行政处罚
+            stock_sql = "select count(1) from s2_risk_assess where administration_punishment = '{}' and punishment_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            xzcfNum = rows_change[0].get("count(1)")
+            # 失信信息
+            stock_sql = "select count(1) from s2_risk_assess where trust_break_info = '{}' and break_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            sxxxNum = rows_change[0].get("count(1)")
+            # 案件流程
+            stock_sql = "select count(1) from s2_risk_assess where case_procedure = '{}' and case_count > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            ajlcNum = rows_change[0].get("count(1)")
+            # 裁判文书
+            stock_sql = "select count(1) from s2_risk_assess where judicial_document = '{}' and judicial_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            cpwsNum = rows_change[0].get("count(1)")
+            # 开庭公告
+            stock_sql = "select count(1) from s2_risk_assess where court_notice = '{}' and notice_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            ktggNum = rows_change[0].get("count(1)")
+            # 司法冻结
+            stock_sql = "select count(1) from s2_risk_assess where judicial_freeze = '{}' and freeze_date > date(now() - interval '6' month);".format(name)
+            cursor.execute(stock_sql)
+            rows_change = cursor.fetchall()
+            sfdjNum = rows_change[0].get("count(1)")
+
+            qybgzNum = djgbgNum + frbgNum + jyfwbgNum + gqbgNum
+            # 企业近半年风险新增总数
+            qyfxNum = bzxqkNum+fyggNum+xzcfNum+sxxxNum+ajlcNum+cpwsNum+ktggNum+sfdjNum
+
         if len(gaoguan) < 3:
             for i in range(3-len(gaoguan)):
                 gaoguan.append(
@@ -84,108 +150,121 @@ class BaseinfoStaticView(BaseView):
             gaoguan = gaoguan[:3]
 
         # 累计营收
-        v0, n0 = get_unit_num(thedict=data_dict, key="1_to_X_month_accumulate_revenue_income", unit="万")
+        v0, n0 = get_unit_num(thedict=data_dict, key="1_to_X_month_accumulate_revenue_income", unit="元")
         # 地方级收入
         v1, n1 = get_unit_num(thedict=data_dict, key="1_to_X_month_accumulate_tax_income_by_area", unit="元")
         # 区级收入
         v2, n2 = get_unit_num(thedict=data_dict, key="1_to_X_month_accumulate_tax_income_by_district", unit="元")
 
+
+        ent_deve_cost_v, ent_deve_cost_u = get_unit_num(thedict=data_dict, key="ent_deve_cost", unit="元")
+        total_award_v, total_award_u = get_unit_num(thedict=data_dict, key="total_award", unit="元")
+
         static = {
-          "year": year,
-          "basicInfo": {
-
-              "name": get_dict_key(thedict=data_dict, key="enterprise_name"),
-              "building": get_dict_key(thedict=data_dict, key="building"),
-              "industry": get_dict_key(thedict=data_dict, key="industry"),
-              "peopleNum": get_dict_key(thedict=data_dict, key="employee"),
-              "space": "{}m²".format(get_dict_key(thedict=data_dict, key="area")),
-              "Capital": "{}".format(get_dict_key(thedict=data_dict, key="reg_capital")),
-              "times": get_dict_key(thedict=data_dict, key="founded"),
-              "nature": get_dict_key(thedict=data_dict, key="enterprise_nature"),
-              "jie_xiang": get_dict_key(thedict=data_dict, key="townstreet"),
-              "guan_jia": get_dict_key(thedict=data_dict, key="housekeeper"),
-          },
-          # 标签
-          "enterpriseLabel": {
-            "is_sjfwb_qy": 'true' if data_dict.get("city_wide_enterprise", "") else 'false',             # 市级服务包
-            "is_ss_qy": 'true' if data_dict.get("listed_enterprise", "") else 'false',                   # 上市
-            "is_zgcgx_qy": 'true' if data_dict.get("zhongguancun_tech_enterprise", "") else 'false',     # 中关村高新
-            "is_dl_qy": 'true' if data_dict.get("degnling_plan", "") else 'false',                       # 瞪羚
-            "is_qjfwb_qy": 'true' if data_dict.get("region_wide_enterprise", "") else 'false',           # 区级服务包
-            "is_gs_qy": 'true' if data_dict.get("enterprise_above_designated_size", "") else 'false',    # 规上
-            "is_gjzdfz_qy": 'true' if data_dict.get("jie_xiang", "") else 'false',                       # 国家重点
-            "is_djs_qy": 'true' if data_dict.get("unicorn_plan", "") else 'false',                       # 独角兽
-            "is_fm_qy": 'true' if data_dict.get("fengming_plan", "") else 'false',                       # 凤鸣
-            "is_zb_qy": 'true' if data_dict.get("headquarter", "") else 'false',                         # 总部
-            "is_kg_zb_qy": 'true' if data_dict.get("mnc_headquarter", "") else 'false',                  # 跨国总部
-
-          },
-          # 重要经济数据
-          "tax": {
-            "ljys_tax": {
-              "number": v0,   # 累计营收
-              "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_revenue"),                        # 同比变化率
-              "speech": "{}月至{}月累计营收".format(1, get_dict_key(thedict=data_dict, key="", num=2)),
-              "unit": n0,
+            "year": year,
+            "basicInfo": {
+                "name": get_dict_key(thedict=data_dict, key="enterprise_name"),
+                "building": get_dict_key(thedict=data_dict, key="building"),
+                "industry": get_dict_key(thedict=data_dict, key="industry"),
+                "peopleNum": get_dict_key(thedict=data_dict, key="employee"),
+                "space": "{}m²".format(get_dict_key(thedict=data_dict, key="area")),
+                "Capital": "{}".format(get_dict_key(thedict=data_dict, key="reg_capital")),
+                "times": get_dict_key(thedict=data_dict, key="founded"),
+                "nature": get_dict_key(thedict=data_dict, key="enterprise_nature"),
+                "jie_xiang": get_dict_key(thedict=data_dict, key="townstreet"),
+                "guan_jia": get_dict_key(thedict=data_dict, key="housekeeper"),
             },
-            "dj_ljys_tax": {
-              "number": v1,  # 累计地级营收
-              "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_area"),                      # 同比变化率
-              "speech": "{}月至{}月累计地方级收入".format(1, get_dict_key(thedict=data_dict, key="", num=3)),
-              "unit": n1,
+            # 标签
+            "enterpriseLabel": {
+                "is_sjfwb_qy": 'true' if data_dict.get("city_wide_enterprise", "") else 'false',             # 市级服务包
+                "is_ss_qy": 'true' if data_dict.get("listed_enterprise", "") else 'false',                   # 上市
+                "is_ggx_qy": 'true' if data_dict.get("national_tech_enterprise", "") else 'false',         # 国高新
+                "is_zgcgx_qy": 'true' if data_dict.get("zhongguancun_tech_enterprise", "") else 'false',     # 中关村高新
+                "is_dl_qy": 'true' if data_dict.get("degnling_plan", "") else 'false',                       # 瞪羚
+                "is_qjfwb_qy": 'true' if data_dict.get("region_wide_enterprise", "") else 'false',           # 区级服务包
+                "is_gs_qy": 'true' if data_dict.get("enterprise_above_designated_size", "") else 'false',    # 规上
+                "is_gjzdfz_qy": 'true' if data_dict.get("jie_xiang", "") else 'false',                       # 国家重点
+                "is_djs_qy": 'true' if data_dict.get("unicorn_plan", "") else 'false',                       # 独角兽
+                "is_fm_qy": 'true' if data_dict.get("fengming_plan", "") else 'false',                       # 凤鸣
+                "is_zb_qy": 'true' if data_dict.get("headquarter", "") else 'false',                         # 总部
+                "is_kg_zb_qy": 'true' if data_dict.get("mnc_headquarter", "") else 'false',                  # 跨国总部
             },
-            "qj_ljys_tax": {
-              "number": v2,      # 累计区级
-              "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_district"),                           # 同比变化率
-              "speech": "{}月至{}月区级收入".format(1, get_dict_key(thedict=data_dict, key="", num=3)),
-              "unit": n2,
+            # 重要经济数据
+            "tax": {
+                "ljys_tax": {
+                    "number": v0,   # 累计营收
+                    "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_revenue"),                        # 同比变化率
+                    "speech": "{}月至{}月累计营收".format(1, get_dict_key(thedict=data_dict, key="", num=4)),
+                    "unit": n0,
+                },
+                "dj_ljys_tax": {
+                    "number": v1,  # 累计地级营收
+                    "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_area"),                      # 同比变化率
+                    "speech": "{}月至{}月累计地方级收入".format(1, get_dict_key(thedict=data_dict, key="", num=4)),
+                    "unit": n1,
+                },
+                "qj_ljys_tax": {
+                    "number": v2,      # 累计区级
+                    "tb": get_dict_key(thedict=data_dict, key="ratio_change_by_district"),                           # 同比变化率
+                    "speech": "{}月至{}月区级收入".format(1, get_dict_key(thedict=data_dict, key="", num=4)),
+                    "unit": n2,
+                },
             },
+            # 企业创新能力
+            "economics": {
+                "technology": {                              # 企业研发费用
+                "number": ent_deve_cost_v,
+                "unit": ent_deve_cost_u
+                },
+                "investment": get_dict_key(thedict=data_dict, key="ent_deve_ratio"),                # 企业研发投入比例
+                "research": {
+                "tb": get_dict_key(thedict=data_dict, key="ent_deve_ratio_by_year"),                      # 同比增速
+                "ranking": get_dict_key(thedict=data_dict, key="ent_deve_rank")                  # 在服务包企业排名
+                },
+                "zj_trademark": get_dict_key(thedict=data_dict, key="trademark_obtain_in_recent_year", num=0),              # 一年商标增幅
+                "zj_patent": get_dict_key(thedict=data_dict, key="patent_acquire_in_recent_year", num=0),                # 一年专利增幅
+                "zj_softWork": get_dict_key(thedict=data_dict, key="computer_software_copyright _in_recent_year", num=0),               # 一年软著增幅
 
-          },
-          # 企业创新能力
-          "economics": {
-            "technology": {                              # 企业研发费用
-              "number": get_dict_key(thedict=data_dict, key="ent_deve_cost"),
-              "unit": "万"
+                "tzj_trademark": get_dict_key(thedict=data_dict, key="trademark_owned_total", num=0),  # 总商标增幅
+                "tzj_patent": get_dict_key(thedict=data_dict, key="patent_owned_total", num=0),  # 总专利增幅
+                "tzj_softWork": get_dict_key(thedict=data_dict, key="computer_software_copyright_owned_total", num=0)  # 总软著增幅
             },
-            "investment": get_dict_key(thedict=data_dict, key="ent_deve_ratio"),                # 企业研发投入比例
-            "research": {
-              "tb": get_dict_key(thedict=data_dict, key="ent_deve_ratio_by_year"),                      # 同比增速
-              "ranking": get_dict_key(thedict=data_dict, key="ent_deve_rank")                  # 在服务包企业排名
+            # 风险异动
+            "riskChangeInfo": {
+                "qy_change": qybgzNum,              # 企业变更总次数
+                "djg_change": djgbgNum,            # 董监半年变更
+                "faren_change": frbgNum,        # 法人变更
+                "jingying_change": jyfwbgNum, # 经营范围
+                "gq_change": gqbgNum,           # 股权变更
+
+                "qyfxNum": qyfxNum,              # 企业风险                  # 企业半年风险新增
+                "bei_zhi_xing": bzxqkNum,         # 被执行
+                "fa_yuan_gong_gao_Num": fyggNum,  # 法院公告
+                "xzcfNum": xzcfNum,              # 行政处罚
+                "sxxxNum": sxxxNum               # 失信信息
+
+                # "qy_change": get_dict_key(thedict=data_dict, key="enterprise_chane_in_half_year", num=0),                                # 企业变更总次数
+                # "djg_change": get_dict_key(thedict=data_dict, key="dongjiangao_changing_filing_increased_in_recent_half_year", num=0),   # 董监半年变更
+                # "faren_change": get_dict_key(thedict=data_dict, key="legal_entity_change_number", num=0),                                # 法人
+                # "jingying_change": get_dict_key(thedict=data_dict, key="bustiness_term_scope_change_number", num=0),                     # 经营范围
+                # "gq_change": get_dict_key(thedict=data_dict, key="equity_change_increased_in_recent_half_year", num=0),                  # 股权变更
+
+                # "qyfxNum": get_dict_key(thedict=data_dict, key="enterprise_risk_increment_in_recent_half_year", num=0),                     # 企业风险                  # 企业半年风险新增
+                # "xzcfNum": get_dict_key(thedict=data_dict, key="administrative_punishment_increased_in_recent_half_year", num=0),           # 行政处罚
+                # "fa_yuan_gong_gao_Num": get_dict_key(thedict=data_dict, key="court_annoucement_increment_number", num=0),                   # 法院公告
+                # "bei_zhi_xing": get_dict_key(thedict=data_dict, key="executed_situation_increment_number", num=0),                          # 被执行
+                # "sxxxNum": get_dict_key(thedict=data_dict, key="trusting_breaking_information_increased_in_recent_half_year", num=0)        # 失信信息
             },
-            "zj_trademark": get_dict_key(thedict=data_dict, key="trademark_obtain_in_recent_year", num=0),              # 一年商标增幅
-            "zj_patent": get_dict_key(thedict=data_dict, key="patent_acquire_in_recent_year", num=0),                # 一年专利增幅
-            "zj_softWork": get_dict_key(thedict=data_dict, key="computer_software_copyright _in_recent_year", num=0),               # 一年软著增幅
+            # 个税信息
+            "ge_shui": {
+                "p_num": get_dict_key(thedict=data_dict, key="award_number", num=0),
+                "p_unit": "人",
 
-            "tzj_trademark": get_dict_key(thedict=data_dict, key="trademark_owned_total", num=0),  # 总商标增幅
-            "tzj_patent": get_dict_key(thedict=data_dict, key="patent_owned_total", num=0),  # 总专利增幅
-            "tzj_softWork": get_dict_key(thedict=data_dict, key="computer_software_copyright_owned_total", num=0)  # 总软著增幅
-          },
-          # 风险异动
-          "riskChangeInfo": {
-
-              "qy_change": get_dict_key(thedict=data_dict, key="enterprise_chane_in_half_year", num=0),                                # 企业变更总次数
-              "djg_change": get_dict_key(thedict=data_dict, key="dongjiangao_changing_filing_increased_in_recent_half_year", num=0),   # 董监半年变更
-              "faren_change": get_dict_key(thedict=data_dict, key="legal_entity_change_number", num=0),                                # 法人
-              "jingying_change": get_dict_key(thedict=data_dict, key="bustiness_term_scope_change_number", num=0),                     # 经营范围
-              "gq_change": get_dict_key(thedict=data_dict, key="equity_change_increased_in_recent_half_year", num=0),                  # 股权变更
-
-              "qyfxNum": get_dict_key(thedict=data_dict, key="enterprise_risk_increment_in_recent_half_year", num=0),                     # 企业风险                  # 企业半年风险新增
-              "xzcfNum": get_dict_key(thedict=data_dict, key="administrative_punishment_increased_in_recent_half_year", num=0),           # 行政处罚
-              "fa_yuan_gong_gao_Num": get_dict_key(thedict=data_dict, key="court_annoucement_increment_number", num=0),                   # 法院公告
-              "bei_zhi_xing": get_dict_key(thedict=data_dict, key="executed_situation_increment_number", num=0),                          # 被执行
-              "sxxxNum": get_dict_key(thedict=data_dict, key="trusting_breaking_information_increased_in_recent_half_year", num=0)        # 失信信息
-          },
-          # 个税信息
-          "ge_shui": {
-              "p_num": get_dict_key(thedict=data_dict, key="award_number", num=0),
-              "p_unit": "人",
-
-              "t_num": get_dict_key(thedict=data_dict, key="total_award", num=0),
-              "t_unit": "万"
-          },
-          # 高管信息
-          "managerInfo": gaoguan,
+                "t_num": total_award_v,
+                "t_unit": total_award_u
+            },
+            # 高管信息
+            "managerInfo": gaoguan,
             # [
             # {
             #   "photo": "NaN",
@@ -215,7 +294,7 @@ class BaseinfoStaticView(BaseView):
             #   "jian_li": "熊维平，男，汉族，1956年11月生，江西南昌人，1971年9月参加工作，1976年6月加入中国共产党，江西冶金学院（现江西理工大学）矿业系选矿专业毕业，研究生学历，工学博士学位，博士后，教授，北京大学博士生导师。",
             # }
 
-          # ]
+            # ]
         }
 
         return static

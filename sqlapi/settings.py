@@ -80,12 +80,12 @@ WSGI_APPLICATION = 'sqlapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -130,8 +130,8 @@ ERROR_URL = '/api/v1/error/{}'
 
 REDIS_CONFIG = {}
 
-RPDSQL = {"host": "192.168.3.158",
-          "port": 15333,
+RPDSQL = {"host": "192.168.30.78",
+          "port": 5521,
           "user": "root",
           "password": "",
           "database": "rpdb"}

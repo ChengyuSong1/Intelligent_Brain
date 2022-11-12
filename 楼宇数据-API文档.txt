@@ -1,0 +1,187 @@
+# 1. 朝科创 API 接口文档
+
+## 1.1. API V1 接口说明
+
+- 服务端已开启 CORS 跨域支持
+- 使用 HTTP Status Code 标识状态
+- 数据返回格式统一使用 JSON
+
+### 1.1.1. 支持的请求方法
+
+- GET：从服务器取出资源（一项或多项）。
+
+### 1.1.2. 通用返回状态说明
+
+| *状态码* | *含义*                | *说明*                               |
+| -------- | --------------------- | ------------------------------------ |
+| 200      | OK                    | 请求成功                             |
+| 400      | BAD REQUEST           | 请求的地址不存在或者包含不支持的参数 |
+| 401      | UNAUTHORIZED          | 未授权                               |
+| 403      | FORBIDDEN             | 被禁止访问                           |
+| 404      | NOT FOUND             | 请求的资源不存在                     |
+| 500      | INTERNAL SERVER ERROR | 内部错误                             |
+|          |                       |                                      |
+
+### 1.2. 屏幕1-朝阳区楼宇总览页面
+
+### 1.2.1. 模块1 - 朝阳区楼宇基本信息和地图
+
+- 请求路径： api/v1/build/s1/ly/basicinfomap
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success.",
+    "data": {
+        "jbxxhdt": {
+            "lvztsl": lvztsl,  # 朝阳区楼宇载体数量
+            "lyztmj": lyztmj,  # 朝阳区楼宇载体面积
+            "kzsmj": kzsmj,  # 可租售面积
+            "lydqztkzl": lydqztkzl,  # 朝阳区楼宇当前总体空置率
+            "lyztkzltbbhl": lyztkzltbbhl,  # 朝阳区楼宇总体空置率同比变化率
+            "lynqyzs": lynqyzs,  # 朝阳区楼宇内企业总数
+            "lynsbjnrs": lynsbjnrs,  # 朝阳区楼宇内社保缴纳人数
+            "nsyylysl": nsyylysl,  # 朝阳区纳税亿元楼宇数量
+            "nssyylysl": nssyylysl,  # 朝阳区纳税十亿元楼宇数量
+        }
+    }
+}
+```
+
+### 1.2.2. 模块2 - 朝阳区楼宇总体情况
+
+- 请求路径： api/v1/build/s1/ly/generalsituation
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "lyztqk": {
+            "lydnzss": lydnzss,  # 朝阳区楼宇当年1至4月总税收
+            "lydnzsstbbhl": lydnzsstbbhl,  # 朝阳区楼宇当年1至4月总税收同比变化率
+            "lydnqjsr": lydnqjsr,  # 朝阳区楼宇当年1至4月区级收入
+            "lydnqjsrtbbhl": lydnqjsrtbbhl,  # 朝阳区楼宇当年1至4月区级收入同比变化率
+            "lydnrjqjsr": lydnrjqjsr,  # 朝阳区楼宇当年1至4月人均区级收入
+            "lydndjqjsr": lydndjqjsr,  # 朝阳区楼宇当年1至X月地均区级收入
+            "lyqjsrtbbhbt": lyqjsrtbbhbt,  # 朝阳区楼宇1至4月区级收入同比变化饼图
+            "fhyqyqjsr_y": fhyqyqjsr_y,  # 朝阳区楼宇主导行业分布-分行业企业区级收入  有主导
+            "fhyqyqjsr_n": fhyqyqjsr_n,  # 朝阳区楼宇主导行业分布-分行业企业区级收入  无主导
+            "fhyqysl_y": fhyqysl_y,  # 朝阳区楼宇主导行业分布-分行业企业数量  有主导
+            "fhyqysl_n": fhyqysl_n,  # 朝阳区楼宇主导行业分布-分行业企业数量  无主导
+            "lydqkzlqk": lydqkzlqk,  # 朝阳区楼宇当前空置率情况
+            "lynqybdnsl": lynqybdnsl,  # 朝阳区楼宇内企业本地纳税率
+            "lynqybdgszcl": lynqybdgszcl,  # 楼宇内企业本地工商注册率
+        }
+    }
+}
+```
+
+### 1.2.3. 模块3 - 重点功能区内楼宇情况（暂时没有数据）
+
+- 请求路径： api/v1/build/s1/ly/gongnengqu
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        ...
+    }
+}
+```
+
+### 1.2.4. 模块4 - 各街乡楼宇分析
+
+- 请求路径： api/v1/build/s1/ly/gejiexiang
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "jbxxhdt": {
+            "jxlyqjsrtbbq": jxlyqjsrtbbq,  # 街乡楼宇区级收入同比标签
+            "jxlykzlbq": jxlykzlbq,  # 街乡楼宇空置率标签
+            "jxsdnsbq": jxsdnsbq,  # 街乡属地纳税标签
+            "jxsdzcbq": jxsdzcbq,  # 街乡属地注册标签
+        },
+    }
+}
+```
+
+### 1.3. 屏幕2-CBD核心区域楼宇总览页面
+
+### 1.3.1. 模块1 - 总体信息
+
+- 请求路径： api/v1/build/s2/cbd/overview
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success.",
+    "data": {
+        "ztxx": {
+            "lyztsl": lyztsl,         # 楼宇载体数量
+            "lyztzmj": lyztzmj,       # 楼宇载体总面积
+            "lykzsmj": lykzsmj,       # 楼宇可租售面积
+            "pjzj": pjzj,             # 平均租金
+            "qysl": qysl,             # 企业数量
+            "sbjyrs": sbjyrs,         # 社保缴纳人数
+            "nsyylysl": nsyylysl,     # 纳税亿元楼宇数量
+            "nssyylysl": nssyylysl    # 纳税十亿元楼宇数量
+        },
+    }
+}
+```
+
+### 1.3.2. 模块2 - 楼内企业流动情况（1至X月）
+
+- 请求路径： api/v1/build/s1/ly/generalsituation
+- 请求方法： get
+- 请求参数： 无
+
+- 响应数据
+
+```json
+{
+    "code": 200,
+    "msg": "success",
+    "data": {
+        "lnqyldqk": {
+            "dqztkzl": dqztkzl,          # 当前总体空置率
+            "ztkzltbbhl": ztkzltbbhl,    # 总体空置率同比变化率
+            "lydqkzlqkbt": lydqkzlqkbt,  # 楼宇当前空置率情况饼图
+            "ljjlrqys": ljjlrqys,        # 当年1至X月累计净流入企业数
+            "ljjlrqystb": ljjlrqystb,    # 当年1至X月累计净流入企业数同比
+            "qyzsltbbh": qyzsltbbh,      # 企业总数量同比变化
+            "cbdqysl": cbdqysl           # 过去一年及今年1至X月CBD区域企业数量
+        }
+    }
+}
+```
+
+### 1.3.3. 模块3 - 楼宇税收贡献情况(正在整理)
+
+
+

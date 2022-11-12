@@ -39,7 +39,7 @@ class TaxationStaticView(BaseView):
         shuiallyear = dict()
         jingying_dict = dict()
         with MysqlDB(database=RPDSQL) as cursor:
-            sql = "SELECT * FROM  screen3_year where enterprise_name='{}' order by year desc;".format(name)
+            sql = "SELECT *,sum(city_maintenance_and_construction_tax+additional_education_tax+local_additional_education_tax) as vat_additional_tax FROM  screen3_year where enterprise_name='{}' group by year order by year desc;".format(name)
             cursor.execute(sql)
             rows = cursor.fetchall()
             if len(rows) > 0:
@@ -91,9 +91,10 @@ class TaxationStaticView(BaseView):
 
         five_years = get_five_year()
         months = [i for i in range(1, 13)]
-        last_year = year1 - 1
+        # last_year = year1 - 1
+        last_year = year1
 
-        peopleNum = [get_dict_key(thedict=all_year_data.get(i, {}), key="employee") for i in [i for i in range(last_year-4, last_year+1)]]
+        peopleNum = [get_dict_key(thedict=all_year_data.get(i, {}), key="employee") for i in [i for i in range(last_year-5, last_year+1)]]
         # 税负企业
         qy_num1 = [get_dict_key(thedict=shuiallyear.get(i, {}), key="tax_revenue_ratio", units=0.01) for i in [i for i in range(last_year-4, last_year+1)]]
         # 税负行业
@@ -117,7 +118,7 @@ class TaxationStaticView(BaseView):
         # 总税收入accum_ent_total_tax_incm
         zssr, zssr_unit = get_unit_num(thedict=jingying_dict, key="accum_ent_total_tax_incm", unit="元")
         # 地方级税收avg_area_accum_tax_incm_contr
-        dfjss, dfjss_unit = get_unit_num(thedict=jingying_dict, key="avg_area_accum_tax_incm_contr", unit="元")
+        dfjss, dfjss_unit = get_unit_num(thedict=jingying_dict, key="local_accum_tax_incm", unit="元")
         # 区级税收dstr_accum_ent_tax_incm
         qjss, qjss_unit = get_unit_num(thedict=jingying_dict, key="dstr_accum_ent_tax_incm", unit="元")
 
@@ -130,6 +131,17 @@ class TaxationStaticView(BaseView):
         v6, n6 = get_unit_num(thedict=year_data, key="Increment_tax_on_land_value")
         v7, n7 = get_unit_num(thedict=year_data, key="additional_education_tax")
         v8, n8 = get_unit_num(thedict=year_data, key="local_additional_education_tax")
+        v9, n9 = get_unit_num(thedict=year_data, key="vat_additional_tax")
+
+        fenshuisort = [['增值税', v1, n1, 'true', get_dict_key(thedict=year_data, key="ent_add_on_tax_dstr_ratio")],
+                       ['企业所得税', v2, n2, 'true', get_dict_key(thedict=year_data, key="ent_value_added_tax_dstr_ratio")],
+                       ['个人所得税', v3, n3, 'true', get_dict_key(thedict=year_data, key="ent_individual_tax_dstr_ratio")],
+                       ['印花税', v4, n4, 'false', get_dict_key(thedict=year_data, key="")],
+                       ['土地增值税', v6, n6, 'true', get_dict_key(thedict=year_data, key="ent_land_tax_added_dstr_ratio")],
+                       ['增值税附加税', v9, n9, 'false', get_dict_key(thedict=year_data, key="")]
+                       ]
+        # 降序
+        fenshuisort.sort(key=lambda x:x[1], reverse=True)
 
         static = {
             "name": name,
@@ -183,7 +195,7 @@ class TaxationStaticView(BaseView):
 
                 # 本地缴纳社保员工比例同比变化
                 "trend": {
-                    "year": [i for i in range(last_year-4, last_year+1)],
+                    "year": [i for i in range(last_year-5, last_year+1)],
                     # 五年人数
                     "peopleNum": {
                         "num": peopleNum,
@@ -211,9 +223,6 @@ class TaxationStaticView(BaseView):
                 "dj_unit": "万元/㎡",                    # 地均单位
                 "dj_tb": get_dict_key(thedict=month_data, key="area_avg_accum_tax_incm_contr_compare_last_year_ratio"),                 # 地均同比
                 "dj_hy_tb": get_dict_key(thedict=month_data, key=""),              # 地均同行业比
-
-
-
             },
             #  //模块2：企业税负监测
             "fu_wu_bao_qy_num": get_dict_key(thedict=shuifudict, key="serv_pack_indus_ent_num"),
@@ -255,7 +264,7 @@ class TaxationStaticView(BaseView):
                 "d_taxCount": {
                     "number":  dfjss,
                     "unit": dfjss_unit,
-                    "tb": get_dict_key(thedict=month_data, key="1_to_X_month_dstr_tax_incm_ratio_change"),
+                    "tb": get_dict_key(thedict=month_data, key="ratio_change_by_area"),
                 },
                 #  //区税收排名
                 "q_taxCountRank": get_dict_key(thedict=month_data, key="dstr_tax_incm_compare_dstr_rank"),
@@ -296,68 +305,91 @@ class TaxationStaticView(BaseView):
                 # “地方教育附加收入”
                 "tax_FanChart": {
                     "name": [
-                        "增值税",  # true 1
-                        "企业所得税",  # true2
-                        "个人所得税",  # true4
-                        "印花税",  # 5
-                        "城市维护建设税",  ####8
-                        "土地增值税",  # true15
-                        "教育费附加收入",
-                        "地方教育附加收入",
-
+                        # "增值税",  # true 1
+                        # "企业所得税",  # true2
+                        # "个人所得税",  # true4
+                        # "印花税",  # 5
+                        # # "城市维护建设税",  ####8
+                        # "土地增值税",  # true15
+                        # # "教育费附加收入",
+                        # # "地方教育附加收入",
+                        # "增值税附加税",
+                        fenshuisort[0][0],
+                        fenshuisort[1][0],
+                        fenshuisort[2][0],
+                        fenshuisort[3][0],
+                        fenshuisort[4][0],
+                        fenshuisort[5][0],
                     ],
                     "number": [
-                        v1,
-                        v2,
-                        v3,
-                        v4,
-                        v5,
-                        v6,
-                        v7,
-                        v8,
+                        # v1,
+                        # v2,
+                        # v3,
+                        # v4,
+                        # # v5,
+                        # v6,
+                        # # v7,
+                        # # v8,
+                        # v9,
+                        fenshuisort[0][1],
+                        fenshuisort[1][1],
+                        fenshuisort[2][1],
+                        fenshuisort[3][1],
+                        fenshuisort[4][1],
+                        fenshuisort[5][1],
                     ],
                     "unit": [
-                        n1,  # 1
-                        n2,
-                        n3,
-                        n4,  # 5
-                        n5,
-                        n6,
-                        n7,
-                        n8,
+                        # n1,  # 1
+                        # n2,
+                        # n3,
+                        # n4,  # 5
+                        # # n5,
+                        # n6,
+                        # # n7,
+                        # # n8,
+                        # n9,
+                        fenshuisort[0][2],
+                        fenshuisort[1][2],
+                        fenshuisort[2][2],
+                        fenshuisort[3][2],
+                        fenshuisort[4][2],
+                        fenshuisort[5][2],
                     ],
 
                     "is_ld": [
-                        "true",
-                        "true",
-                        "true",
-                        "flase",
-                        "flase",
-                        "true",
-                        "flase",
-                        "flase",
-
+                        # "true",
+                        # "true",
+                        # "true",
+                        # "flase",
+                        # # "flase",
+                        # "true",
+                        # # "flase",
+                        # # "flase",
+                        # "flase",
+                        fenshuisort[0][3],
+                        fenshuisort[1][3],
+                        fenshuisort[2][3],
+                        fenshuisort[3][3],
+                        fenshuisort[4][3],
+                        fenshuisort[5][3],
 
                     ],
-                        #  "增值税",  # true 1
-                        #  "企业所得税",  # true2
-                        #  "个人所得税",  # true4
-                        #  "印花税",  # 5
-                        #  "城市维护建设税",  ####8
-                        #  "土地增值税",  # true15
-                        #  "教育费附加收入",
-                        #  "地方教育附加收入",
-
                     "ld_num": [
-                        get_dict_key(thedict=year_data, key="ent_add_on_tax_dstr_ratio"),
-                        get_dict_key(thedict=year_data, key="ent_value_added_tax_dstr_ratio"),
-                        get_dict_key(thedict=year_data, key="ent_individual_tax_dstr_ratio"),
-                        get_dict_key(thedict=year_data, key=""),
-                        get_dict_key(thedict=year_data, key=""),
-                        get_dict_key(thedict=year_data, key="ent_land_tax_added_dstr_ratio"),
-                        get_dict_key(thedict=year_data, key=""),
-                        get_dict_key(thedict=year_data, key=""),
-
+                        # get_dict_key(thedict=year_data, key="ent_add_on_tax_dstr_ratio"),
+                        # get_dict_key(thedict=year_data, key="ent_value_added_tax_dstr_ratio"),
+                        # get_dict_key(thedict=year_data, key="ent_individual_tax_dstr_ratio"),
+                        # get_dict_key(thedict=year_data, key=""),
+                        # # get_dict_key(thedict=year_data, key=""),
+                        # get_dict_key(thedict=year_data, key="ent_land_tax_added_dstr_ratio"),
+                        # # get_dict_key(thedict=year_data, key=""),
+                        # # get_dict_key(thedict=year_data, key=""),
+                        # get_dict_key(thedict=year_data, key=""),
+                        fenshuisort[0][4],
+                        fenshuisort[1][4],
+                        fenshuisort[2][4],
+                        fenshuisort[3][4],
+                        fenshuisort[4][4],
+                        fenshuisort[5][4],
                     ],
                 }
             },

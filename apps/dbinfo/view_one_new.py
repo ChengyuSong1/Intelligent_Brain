@@ -13,7 +13,7 @@ from utils import idutils
 from sqlapi.settings import RPDSQL, JSONDATA_PATH
 from utils.database_utils import MysqlDB
 from apps.dbinfo.utils import get_dict_key, get_color, get_five_year, get_random_bool, get_one_num, \
-    get_random_num, get_ryb, get_random_color, getdate, get_unit_value
+    get_random_num, get_ryb, get_random_color, getdate, get_unit_value, get_unit_num
 
 
 # 1,模块static
@@ -65,7 +65,7 @@ class InfoStaticView(BaseView):
         # q_num = [get_dict_key(thedict=all_data.get(i, {}), key="district_tax_income", units=10000*10000) for i in five_years]
         # z_num = [get_dict_key(thedict=all_data.get(i, {}), key="support_fund") for i in five_years]
         q_num = [get_dict_key(thedict=all_data.get(i, {}), key="dstr_tax_incm", units=10000*10000) for i in five_years]
-        z_num = [get_dict_key(thedict=all_data.get(i, {}), key="support_fund") for i in five_years]
+        z_num = [get_dict_key(thedict=all_data.get(i, {}), key="support_fund", units=10000) for i in five_years]
         z_num[-1] = z_num[-2]
 
         m = 2
@@ -97,6 +97,8 @@ class InfoStaticView(BaseView):
             h2.append(one["value"])
             h3.append(one["unit"])
 
+        support_fund_v, support_fund_u = get_unit_num(thedict=all_data.get(2020, {}), key="support_fund", unit="元")
+
         static = {
           # 模块1， 朝阳区服务包企业基本信息
           "EnterpriseInfo": {
@@ -108,8 +110,9 @@ class InfoStaticView(BaseView):
               get_dict_key(thedict=year_data, key="local_tax_income_by_district_rate"),  # 地方级收入占全区地方级收入比
               # get_dict_key(thedict=data_dict, key="district_tax_income", units=10000*10000),  # 企业区级收入总量
               # get_dict_key(thedict=data_dict, key="district_tax_income_by_district_rate"),  # 区级收入占全区区级收入比
-              get_dict_key(thedict=all_data.get(2020, {}), key="support_fund"),                          # 企业资金支持金额总量
-              get_dict_key(thedict=all_data.get(2020, {}), key="support_fund_by_district_rate", units=0.01),  # 资金支持金额占区资金支持金额比
+              # get_dict_key(thedict=all_data.get(2020, {}), key="support_fund"),                          # 企业资金支持金额总量
+              support_fund_v,
+              get_dict_key(thedict=all_data.get(2020, {}), key="support_fund_by_district_rate"),  # 资金支持金额占区资金支持金额比
 
               # 26246,  # 企业人才服务总次数
               # get_random_num(),  # 人才服务总次数占全区人才服务次数比
@@ -120,14 +123,8 @@ class InfoStaticView(BaseView):
               "家",
               "亿",
               "%",
-              # "亿",
-              # "%",
-              "万",
-              "%",
-              # "家",
-              # "%",
-              # "家",
-              # "%"
+              support_fund_u,
+              "%"
             ]
           },
 
@@ -273,7 +270,6 @@ class InfoStaticView(BaseView):
               "hy": h1,
               "num": h2,
               "unit": h3,
-
           }
 
         }
@@ -303,6 +299,18 @@ class Picshow(BaseView):
             "地均": "tax_by_area_health_check",
 
         }
+        # attr_dict1 = {
+        #     "营收": "income_health_check_by_month",
+        #     "税收": "tax_health_check_by_month",
+        #     "利润": "profit_health_check",
+        #     "人均": "tax_by_emp_health_check",
+        #     "地均": "tax_by_area_health_check"
+        # }
+        # attr_dict2 = {
+        #     "营收行业": "income_health_check_by_industry",
+        #     "税收行业": "tax_health_check_by_industry",
+        #     "利润增速": "profit_by_industry_health_check"
+        # }
         key = attr_dict.get(classify, "")
 
         with MysqlDB(database=RPDSQL) as cursor:
@@ -338,23 +346,25 @@ class Picshow(BaseView):
         #     pass
         # else:
         #     speech = ["同比变化>3%", "同比变化±3%", "同比变化<-3%"]
-        speech = ["同比下降", "同比持平", "同比增长"]
+        if classify == "营收行业" or classify == "税收行业" or classify == "利润增速":
+            speech = ["高于", "持平", "低于"]
+        else:
+            speech = ["增长", "持平", "下降"]
 
         healthy = {
             "year": year,
             "classify": classify,
             "pic_data": {
-                "color": ["c1", "c2", "c3"],
-                "number": [len(c1num0), len(c2num0), len(c3num0)],
+                "color": ["c3", "c2", "c1"],
+                "number": [len(c3num0), len(c2num0), len(c1num0)],
                 "speech": speech,
                 "unit": "家",
             },
-
-            }
+        }
         return healthy
 
-
 # 1.1 营收
+# 企业营收详情
 class InfoStaticOneView(BaseView):
 
     def get(self, request):
@@ -426,8 +436,8 @@ class InfoStaticOneView(BaseView):
                     self.get_key_num(all_data=all_data, key="income_health_check_by_month", color="c3"),
                     self.get_key_num(all_data=all_data, key="income_health_check_by_month", color="c2"),
                     self.get_key_num(all_data=all_data, key="income_health_check_by_month", color="c1"),
-                    self.get_key_num_big(all_data=all_data, key="enterprise_income_comparison", color=10),
-                    self.get_key_num_small(all_data=all_data, key="enterprise_income_comparison", color=-10),
+                    self.get_key_num_big(all_data=all_data, key="enterprise_income_comparison", color=15),
+                    self.get_key_num_small(all_data=all_data, key="enterprise_income_comparison", color=-15),
                 ],
                 "unit": [
                     "家",
@@ -437,11 +447,16 @@ class InfoStaticOneView(BaseView):
                     "家",
                 ],
                 "speech": [
-                    "同比增长企业数量",
-                    "同比持平企业数量",
-                    "同比下降企业数量",
-                    "营收同比显著增长企业数量",
-                    "营收同比显著下降企业数量",
+                    # "营收同比增长",
+                    # "营收同比持平",
+                    # "营收同比下降",
+                    # "营收同比显著增长",
+                    # "营收同比显著下降",
+                    "同比增长＞3%",
+                    "同比持平±3%",
+                    "同比下降<-3%",
+                    "同比增长＞15%",
+                    "同比下降<-15%",
                 ],
             },
 
@@ -450,8 +465,8 @@ class InfoStaticOneView(BaseView):
                     self.get_key_num(all_data=all_data, key="income_health_check_by_industry", color="c3"),
                     self.get_key_num(all_data=all_data, key="income_health_check_by_industry", color="c2"),
                     self.get_key_num(all_data=all_data, key="income_health_check_by_industry", color="c1"),
-                    self.get_key_num_big(all_data=all_data, key="enterprise_income_comparison_by_industry", color=10),
-                    self.get_key_num_small(all_data=all_data, key="enterprise_income_comparison_by_industry", color=-10),
+                    self.get_key_num_big(all_data=all_data, key="enterprise_income_comparison_by_industry", color=15),
+                    self.get_key_num_small(all_data=all_data, key="enterprise_income_comparison_by_industry", color=-15),
                 ],
                 "unit": [
                     "家",
@@ -461,11 +476,16 @@ class InfoStaticOneView(BaseView):
                     "家",
                 ],
                 "speech": [
-                    "增速超同行业企业数量",
-                    "增速与同行业持平企业数量",
-                    "增速低于同行业企业数量",
-                    "营收增速显著高于同行业企业数量",
-                    "营收增速显著低于同行业企业数量",
+                    # "营收增速超同行业",
+                    # "营收增速与同行业持平",
+                    # "营收增速低于同行业",
+                    # "营收增速显著高于同行业",
+                    # "营收增速显著低于同行业",
+                    "增速超同行＞3%",
+                    "增速与同行业持平±3%",
+                    "增速低于同行<-3%",
+                    "增速高于同行业＞15%",
+                    "增速低于同行业<-15%",
                 ],
             },
 
@@ -482,6 +502,33 @@ class InfoStaticOneListView(BaseView):
         page = int(data.get("page", 1))
         page_len = int(data.get("page_len", 10))
         classify = data.get("classify", "")
+        classify2 = ''
+        if classify == '营收同比增长':
+            classify2 = '营收同比增长'
+        elif classify == '营收同比持平':
+            classify2 = '营收同比持平'
+        elif classify == '营收同比下降':
+            classify2 = '营收同比下降'
+        elif classify == '增速超同行':
+            classify2 = '增速超同行'
+        elif classify == '增速持平同行':
+            classify2 = '增速持平同行'
+        elif classify == '增速低于同行':
+            classify2 = '增速低于同行'
+
+        elif classify == '税收同比增长':
+            classify2 = '区级收入同比增长'
+        elif classify == '税收同比持平':
+            classify2 = '区级收入同比持平'
+        elif classify == '税收同比下降':
+            classify2 = '区级收入同比下降'
+        elif classify == '税收增速超同行':
+            classify2 = '区级收入增速超同行'
+        elif classify == '税收增速持平同行':
+            classify2 = '区级收入增速持平同行'
+        elif classify == '税收增速低于同行':
+            classify2 = '区级收入增速低于同行'
+
         # 营收同比增长、营收同比持平，营收同比下降， 增速超同行、增速持平同行、增速低于同行
         all_data = dict()
         timedata = dict()
@@ -520,8 +567,42 @@ class InfoStaticOneListView(BaseView):
             "税收增速低于同行": {"cv": "c1", "color_v": "tax_health_check_by_industry",
                          "sorted_key": "enterprise_tax_comparison_by_industry",
                          "value_key": "tax_health_check_by_industry", "color_key": "c1", "desc": False},
-
         }
+        # key_dict = {
+        #     "营收同比增长": {"cv": "c3", "color_v": "income_health_check_by_month", "sorted_key": "enterprise_income_comparison",
+        #                "value_key": "income_health_check_by_month", "color_key": "c3", "desc": True},
+        #     "营收同比持平": {"cv": "c2", "color_v": "income_health_check_by_month", "sorted_key": "enterprise_income_comparison",
+        #                "value_key": "income_health_check_by_month", "color_key": "c2", "desc": True},
+        #     "营收同比下降": {"cv": "c1", "color_v": "income_health_check_by_month", "sorted_key": "enterprise_income_comparison",
+        #                "value_key": "income_health_check_by_month", "color_key": "c1", "desc": False},
+        #
+        #     "营收增速超同行": {"cv": "c3", "color_v": "income_health_check_by_industry",
+        #               "sorted_key": "enterprise_income_comparison_by_industry",
+        #               "value_key": "income_health_check_by_industry", "color_key": "c3", "desc": True},
+        #     "营收增速持平同行": {"cv": "c2", "color_v": "income_health_check_by_industry",
+        #                "sorted_key": "enterprise_income_comparison_by_industry",
+        #                "value_key": "income_health_check_by_industry", "color_key": "c2", "desc": True},
+        #     "营收增速低于同行": {"cv": "c1", "color_v": "income_health_check_by_industry",
+        #                "sorted_key": "enterprise_income_comparison_by_industry",
+        #                "value_key": "income_health_check_by_industry", "color_key": "c1", "desc": False},
+        #
+        #     "税收同比增长": {"cv": "c3", "color_v": "tax_health_check_by_month", "sorted_key": "enterprise_tax_comparison",
+        #                "value_key": "tax_health_check_by_month", "color_key": "c3", "desc": True},
+        #     "税收同比持平": {"cv": "c2", "color_v": "tax_health_check_by_month", "sorted_key": "enterprise_tax_comparison",
+        #                "value_key": "tax_health_check_by_month", "color_key": "c2", "desc": True},
+        #     "税收同比下降": {"cv": "c1", "color_v": "tax_health_check_by_month", "sorted_key": "enterprise_tax_comparison",
+        #                "value_key": "tax_health_check_by_month", "color_key": "c1", "desc": False},
+        #
+        #     "税收增速超同行": {"cv": "c3", "color_v": "tax_health_check_by_industry",
+        #                 "sorted_key": "enterprise_tax_comparison_by_industry",
+        #                 "value_key": "tax_health_check_by_industry", "color_key": "c3", "desc": True},
+        #     "税收增速持平同行": {"cv": "c2", "color_v": "tax_health_check_by_industry",
+        #                  "sorted_key": "enterprise_tax_comparison_by_industry",
+        #                  "value_key": "tax_health_check_by_industry", "color_key": "c2", "desc": True},
+        #     "税收增速低于同行": {"cv": "c1", "color_v": "tax_health_check_by_industry",
+        #                  "sorted_key": "enterprise_tax_comparison_by_industry",
+        #                  "value_key": "tax_health_check_by_industry", "color_key": "c1", "desc": False},
+        # }
 
         sorted_key = key_dict.get(classify, {}).get("sorted_key", "enterprise_income_comparison")
         # value_key = key_dict.get(classify, {}).get("value_key", "")
@@ -601,7 +682,7 @@ class InfoStaticOneListView(BaseView):
 
         healthy = {
             "year": year,
-            "classify": classify,
+            "classify": classify2,
             "pic": {
                 "hangye": h1,
                 "number": h2,
@@ -614,6 +695,7 @@ class InfoStaticOneListView(BaseView):
 
 
 # 1.2税收
+# 企业税收详情
 class InfoStaticTwoView(BaseView):
 
     def get(self, request):
@@ -659,11 +741,16 @@ class InfoStaticTwoView(BaseView):
                     "家",
                 ],
                 "speech": [
-                    "同比增长",
-                    "同比持平",
-                    "同比下降",
-                    "税收同比显著增长",
-                    "税收同比显著下降",
+                    # "区级收入同比增长",
+                    # "区级收入同比持平",
+                    # "区级收入同比下降",
+                    # "税收同比显著增长",
+                    # "税收同比显著下降",
+                    "同比增长＞3%",
+                    "同比持平±3%",
+                    "同比下降<-3%",
+                    "同比增长＞15%",
+                    "同比下降<-15%",
                 ],
             },
 
@@ -683,11 +770,21 @@ class InfoStaticTwoView(BaseView):
                     "家",
                 ],
                 "speech": [
-                    "增速超同行业",
-                    "增速与同行业持平",
-                    "增速低于同行业",
-                    "税收增速显著高于同行业",
-                    "税收增速显著低于同行业",
+                    # "区级收入增速超同行业",
+                    # "区级收入增速与同行业持平",
+                    # "区级收入增速低于同行业",
+                    # "税收增速显著高于同行业",
+                    # "税收增速显著低于同行业",
+                    # "增速超同行3%以上",
+                    # "增速与同行业持平",
+                    # "增速低于同行-3%以下",
+                    # "区级收入增速显著高于同行业",
+                    # "区级收入增速显著低于同行业",
+                    "增速超同行＞3%",
+                    "增速与同行业持平±3%",
+                    "增速低于同行<-3%",
+                    "增速高于同行业＞15%",
+                    "增速低于同行业<-15%",
                 ],
             },
 
@@ -709,13 +806,13 @@ class InfoStaticThreeView(BaseView):
         bingtu = dict()
         five_year = list()
         with MysqlDB(database=RPDSQL) as cursor:
-            sql = "SELECT * FROM  s1_3_top_middle  ORDER BY year desc LIMIT 1 OFFSET 0;"
+            sql = "SELECT * FROM s1_3_top_middle ORDER BY year desc LIMIT 1 OFFSET 0;"
             cursor.execute(sql)
             rows = cursor.fetchall()
             year = rows[0].get("year", year)
             five_year = [i for i in range(year-4, year+1)]
 
-            sql2 = "SELECT * FROM  s1_3_top_middle ORDER BY year desc;"
+            sql2 = "SELECT * FROM s1_3_top_middle ORDER BY year desc;"
             cursor.execute(sql2)
             rows2 = cursor.fetchall()
             if len(rows2) > 0:
@@ -757,16 +854,22 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "speech1": "产业资金支持",
-                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="industrial_support_fund") for i in five_year],
-                    "speech2": "个税资金支持",
-                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="individual_tax_support_fund") for i in five_year],
-                    "speech3": "一事一议资金奖励",
-                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="ysyy_support_fund") for i in five_year],
-                    "speech4": "增加至贡献奖励",
-                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="add_on_contribution_fund_support") for i in five_year],
+                    "speech": ["产业资金奖励",  "个税资金奖励", "一事一议奖励", "增加值奖励"],
+                    "number":[
+                        [get_dict_key(thedict=all_data.get(i, {}), key="industrial_support_fund") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="individual_tax_support_fund") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="ysyy_support_fund") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="add_on_contribution_fund_support") for i in five_year]
+                    ],
+                    # "speech1": "产业资金支持",
+                    # "number1": [get_dict_key(thedict=all_data.get(i, {}), key="industrial_support_fund") for i in five_year],
+                    # "speech2": "个税资金支持",
+                    # "number2": [get_dict_key(thedict=all_data.get(i, {}), key="individual_tax_support_fund") for i in five_year],
+                    # "speech3": "一事一议资金奖励",
+                    # "number3": [get_dict_key(thedict=all_data.get(i, {}), key="ysyy_support_fund") for i in five_year],
+                    # "speech4": "增加值贡献奖励",
+                    # "number4": [get_dict_key(thedict=all_data.get(i, {}), key="add_on_contribution_fund_support") for i in five_year],
                     "unit": "万元",
-
                 },
 
             },
@@ -785,14 +888,21 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "speech1": "工作居住证办理",
-                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="work_and_residence_permit") for i in five_year],
-                    "speech2": "高管人才引进",
-                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="executive_talent_intro") for i in five_year],
-                    "speech3": "应届毕业生",
-                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="graduates_settlement") for i in five_year],
-                    "speech4": "留学生人才引进",
-                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="overseas_talent_service_intro") for i in five_year],
+                    "speech": ["工作居住证办理", "高管人才引进", "应届毕业生", "留学生人才引进"],
+                    "number":[
+                        [get_dict_key(thedict=all_data.get(i, {}), key="work_and_residence_permit") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="executive_talent_intro") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="graduates_settlement") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="overseas_talent_service_intro") for i in five_year]
+                    ],
+                    # "speech1": "工作居住证办理",
+                    # "number1": [get_dict_key(thedict=all_data.get(i, {}), key="work_and_residence_permit") for i in five_year],
+                    # "speech2": "高管人才引进",
+                    # "number2": [get_dict_key(thedict=all_data.get(i, {}), key="executive_talent_intro") for i in five_year],
+                    # "speech3": "应届毕业生",
+                    # "number3": [get_dict_key(thedict=all_data.get(i, {}), key="graduates_settlement") for i in five_year],
+                    # "speech4": "留学生人才引进",
+                    # "number4": [get_dict_key(thedict=all_data.get(i, {}), key="overseas_talent_service_intro") for i in five_year],
                     "unit": "次",
                 },
             },
@@ -811,14 +921,21 @@ class InfoStaticThreeView(BaseView):
                 },
                 "five_year": {
                     "year": ["{}年".format(i) for i in five_year],
-                    "speech1": "诚志畅悦园",
-                    "number1": [get_dict_key(thedict=all_data.get(i, {}), key="czcyy") for i in five_year],
-                    "speech2": "梧桐湾嘉苑",
-                    "number2": [get_dict_key(thedict=all_data.get(i, {}), key="wtwjy") for i in five_year],
-                    "speech3": "瑞晖嘉苑",
-                    "number3": [get_dict_key(thedict=all_data.get(i, {}), key="rhjy") for i in five_year],
-                    "speech4": "澜悦景苑",
-                    "number4": [get_dict_key(thedict=all_data.get(i, {}), key="lyjy") for i in five_year],
+                    "speech": ["诚志畅悦园", "梧桐湾嘉苑", "瑞晖嘉苑", "澜悦景苑"],
+                    "number": [
+                        [get_dict_key(thedict=all_data.get(i, {}), key="czcyy") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="wtwjy") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="rhjy") for i in five_year],
+                        [get_dict_key(thedict=all_data.get(i, {}), key="lyjy") for i in five_year]
+                    ],
+                    # "speech1": "诚志畅悦园",
+                    # "number1": [get_dict_key(thedict=all_data.get(i, {}), key="czcyy") for i in five_year],
+                    # "speech2": "梧桐湾嘉苑",
+                    # "number2": [get_dict_key(thedict=all_data.get(i, {}), key="wtwjy") for i in five_year],
+                    # "speech3": "瑞晖嘉苑",
+                    # "number3": [get_dict_key(thedict=all_data.get(i, {}), key="rhjy") for i in five_year],
+                    # "speech4": "澜悦景苑",
+                    # "number4": [get_dict_key(thedict=all_data.get(i, {}), key="lyjy") for i in five_year],
                     "unit": "次",
                 },
             },
@@ -868,7 +985,10 @@ class InfoRankView(BaseView):
 
         the_list = list()
         for row2 in rows2:
-
+            # if classify == "资金":
+            #     value_key_v, value_key_u = get_unit_num(thedict=row2, key=value_key, unit="元")
+            # else:
+            #     value_key_v, value_key_u = get_dict_key(thedict=row2, key=value_key, num=0), unit
             the_list.append(
                 {
                     "code": get_dict_key(thedict=row2, key=rank_key),
@@ -881,3 +1001,4 @@ class InfoRankView(BaseView):
         data = {"year": year, "classify": classify, "data_list": the_list}
         result = {"page": page, "page_len": page_len, "total_num": total_num,  "total_page": total_page, "data": data}
         return result
+
